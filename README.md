@@ -1,2 +1,2 @@
 # ddackdae
-my ml package
+this is easy-to-use ml package
