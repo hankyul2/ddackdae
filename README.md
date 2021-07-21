@@ -18,7 +18,7 @@ Here are model list I am planning to include in this project
 
 ### Computer Vision
 
-**model**
+**Image Classification**
 
 - Alexnet
 - VGG
@@ -26,6 +26,8 @@ Here are model list I am planning to include in this project
 - Efficient Net
 - ...?
 
-**augmentation**
+**Face Recognition**
 
-not planned yet
+- 💦Circle Loss : Computing Loss
+  - https://github.com/TinyZeaMays/CircleLoss 
+  - https://github.com/layumi/Person_reID_baseline_pytorch
