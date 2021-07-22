@@ -16,6 +16,23 @@ Here are model list I am planning to include in this project
 
 
 
+**dataset**
+
+- translation dataset
+
+  I don't know what happed in 2014, but dataset made by 2014 is really popular. if you want to know about dataset more, please check [paper with code machine translation Benchmarks](https://paperswithcode.com/task/machine-translation)
+
+  | dataset name                       | train   | valid | test | How to get                                                   |
+  | ---------------------------------- | ------- | ----- | ---- | ------------------------------------------------------------ |
+  | WMT14 en-de (english to germany)   | 4508785 | 3000  | 3003 | [🤗Datasets](https://huggingface.co/datasets/wmt14)           |
+  | IWSLT14 en-de (english to germany) | 160239  | 7283  | 6750 | [R-DROP github repo](https://github.com/dropreg/R-Drop/tree/main/fairseq_src/examples/translation_rdrop) |
+  |                                    |         |       |      |                                                              |
+  |                                    |         |       |      |                                                              |
+
+  
+
+
+
 ### Computer Vision
 
 **Image Classification**
