@@ -37,14 +37,27 @@ Here are model list I am planning to include in this project
 
 **Image Classification**
 
+- dataset
+  - CIFAR 10, CIFAR 100, ImageNet
+
 - Alexnet
 - VGG
 - ResNet
 - Efficient Net
 - ...?
+- Vision Transformer(ViT)
 
 **Face Recognition**
+
+- dataset
+
+  MS-Celeb-1M, MF1, IJB-C, LFW, YTF, CFP-FP
 
 - 💦Circle Loss : Computing Loss
   - https://github.com/TinyZeaMays/CircleLoss 
   - https://github.com/layumi/Person_reID_baseline_pytorch
+
+
+
+**Face Verification**
+
