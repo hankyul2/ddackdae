@@ -51,13 +51,13 @@ Here are model list I am planning to include in this project
 
 - dataset
 
-  MS-Celeb-1M, MF1, IJB-C, LFW, YTF, CFP-FP
+  Train dataset : MS-Celeb-1M
+
+  Test Datatset : MegaFace(MF1), IJB-C, LFW, YTF, CFP-FP
+
+- arcFace 
 
 - 💦Circle Loss : Computing Loss
   - https://github.com/TinyZeaMays/CircleLoss 
   - https://github.com/layumi/Person_reID_baseline_pytorch
-
-
-
-**Face Verification**
 
