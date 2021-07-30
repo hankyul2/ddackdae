@@ -31,7 +31,7 @@ class PositionalEncoding(nn.Module):
         self.register_buffer('pe', pe.unsqueeze(0))
 
     def forward(self, x):
-        return self.dropout(x + self.pe[:, :x.size(1)].clone().detach())
+        return self.dropout(x + self.pe[:, :x.size(1)].clone().detach().requires_grad_(False))
 
 
 def clone(layer, n):
@@ -202,7 +202,7 @@ def get_model(src_vocab_size, tgt_vocab_size, d_model=512, N=6, d_ff=2048, h=8, 
 
 
 def get_sample_input(pad_idx=0, batch_size=10):
-    src = torch.randint(2, 12, size=(batch_size, 10)).long()
+    src = torch.randint(1, 11, size=(batch_size, 10)).long()
     src[:, 0] = 1
     tgt = src.clone().detach()
     tgt_output = tgt[:, 1:]

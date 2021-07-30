@@ -26,6 +26,7 @@ class ModelWrapper(nn.Module):
     def train(self, dl, device):
         self.model.train()
         total_loss = 0
+        total_token = 0
         for iter, (x, y) in enumerate(dl):
             self.optimizer.zero_grad()
             x, y = self.to_device(x, device), y.to(device)
@@ -36,20 +37,25 @@ class ModelWrapper(nn.Module):
             self.optimizer.step()
 
             total_loss += loss.detach().item() * n_token
+            total_token += n_token
 
-        return total_loss
+        return total_loss / total_token
 
     @torch.no_grad()
     def valid(self, dl, device):
         self.model.eval()
         total_loss = 0
+        total_token = 0
         for iter, (x, y) in enumerate(dl):
             x, y = self.to_device(x, device), y.to(device)
+            n_token = (y != 0).sum().item()
             fc_out = self.forward(x)
-            loss = self.criterion(rearrange(fc_out, 'b s c -> (b s) c'), rearrange(y, 'b s -> (b s)'))
-            total_loss += loss.detach().item()
+            loss = self.criterion(rearrange(fc_out, 'b s c -> (b s) c'), rearrange(y, 'b s -> (b s)')) / n_token
 
-        return total_loss
+            total_loss += loss.detach().item() * n_token
+            total_token += n_token
+
+        return total_loss / total_token
 
     def fit(self, train_dl, valid_dl, num_epoch, device):
         for epoch in range(num_epoch):
@@ -107,7 +113,7 @@ class LabelSmoothing(nn.Module):
         self.pad_idx = pad_idx
         self.smoothing = smoothing
         self.confidence = 1 - smoothing
-        self.criterion = nn.KLDivLoss(reduction='batchmean')
+        self.criterion = nn.KLDivLoss(reduction='sum')
 
     def forward(self, x, y):
         (n, c)= x.shape
@@ -126,8 +132,8 @@ def get_dl(batch_iter=20, batch_size=30):
 
 def run():
     # step 1. prepare dataset
-    src_vocab_size = 12
-    tgt_vocab_size = 12
+    src_vocab_size = 11
+    tgt_vocab_size = 11
 
     train_dl = get_dl
     valid_dl = get_dl
