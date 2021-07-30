@@ -25,8 +25,8 @@ class PositionalEncoding(nn.Module):
         self.dropout = nn.Dropout(p=dropout)
         pe = torch.zeros(max_len, d_model)
         position = torch.arange(0, max_len, 1).unsqueeze(1)
-        mul_term = torch.exp(torch.arange(0, d_model, 2) * (-math.log(10000.0) / d_model))
-        pe[:, ::2] = torch.sin(position * mul_term)
+        mul_term = torch.exp(torch.arange(0, d_model, 2) * -(math.log(10000.0) / d_model))
+        pe[:, 0::2] = torch.sin(position * mul_term)
         pe[:, 1::2] = torch.cos(position * mul_term)
         self.register_buffer('pe', pe.unsqueeze(0))
 
@@ -51,7 +51,7 @@ class MultiheadAttention(nn.Module):
     def forward(self, q, k, v, mask):
         q, k, v = [rearrange(f(x), 'b s (h k) -> b h s k', h=self.h) for f, x in zip(self.w, [q, k, v])]
         scores = q @ k.transpose(-1, -2) / math.sqrt(self.d_k)
-        scores = torch.masked_fill(scores, mask, -1e9)
+        scores = scores.masked_fill(mask, -1e9)
         attn = F.softmax(scores, dim=-1)
         attn = self.dropout(attn)
         w_v = attn @ v
@@ -67,7 +67,7 @@ class PositionwiseFeedforward(nn.Module):
         self.w_2 = nn.Linear(d_ff, d_model)
 
     def forward(self, x):
-        return self.w_2(self.dropout(self.w_1(x)))
+        return self.w_2(self.dropout(F.relu(self.w_1(x))))
 
 
 class LayerNorm(nn.Module):
@@ -102,7 +102,7 @@ class EncoderLayer(nn.Module):
 
     def forward(self, src, src_mask):
         src = self.su[0](src, lambda x: self.attn(x, x, x, src_mask))
-        return self.su[0](src, self.ff)
+        return self.su[1](src, self.ff)
 
 
 class DecoderLayer(nn.Module):
@@ -116,7 +116,7 @@ class DecoderLayer(nn.Module):
     def forward(self, src, tgt, src_mask, tgt_mask):
         tgt = self.su[0](tgt, lambda x: self.attn(x, x, x, tgt_mask))
         tgt = self.su[1](tgt, lambda x: self.attn2(x, src, src, src_mask))
-        return self.su[1](tgt, self.ff)
+        return self.su[2](tgt, self.ff)
 
 
 class Encoder(nn.Module):
@@ -196,20 +196,18 @@ def get_model(src_vocab_size, tgt_vocab_size, d_model=512, N=6, d_ff=2048, h=8, 
 
     for name, param in model.named_parameters():
         if param.dim() > 1:
-            nn.init.xavier_uniform_(param.data)
+            nn.init.xavier_uniform_(param)
 
     return model
 
 
 def get_sample_input(pad_idx=0, batch_size=10):
-    # src = torch.arange(2, 102, 1).view(10, 10)
-    # tgt_output = torch.arange(3, 103, 1).view(10, 10)
-    # tgt_input = torch.cat([torch.ones(10).unsqueeze(1), tgt_output[:, :-1].clone().detach()], dim=1).long()
-    src = torch.cat([torch.ones(batch_size).unsqueeze(1), torch.randint(2, 12, size=(batch_size, 9))], dim=1).long()
-    tgt_output = src.clone().detach()
-    tgt_input = torch.cat([torch.ones(batch_size).unsqueeze(1), tgt_output[:, :-1].clone().detach()], dim=1).long()
+    src = torch.randint(2, 12, size=(batch_size, 10)).long()
+    src[:, 0] = 1
+    tgt = src.clone().detach()
+    tgt_output = tgt[:, 1:]
+    tgt_input = tgt[:, :-1]
     src_mask, tgt_mask = get_mask(src, tgt_input, pad_idx)
-
     return src, tgt_input, tgt_output, src_mask, tgt_mask
 
 
@@ -220,7 +218,7 @@ def get_mask(src, tgt, pad_idx):
 
 
 def get_seq_mask(tgt):
-    return torch.from_numpy(np.triu(np.ones(tgt.size(1)), k=1)) == 1
+    return torch.triu(torch.ones((tgt.size(1), tgt.size(1))), diagonal=1) == 1
 
 
 def get_pad_mask(src, pad_idx):
