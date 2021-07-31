@@ -34,7 +34,7 @@ target_output = ['My', 'name', 'is', 'hankyul']
 
 **Mask**
 
-[annotated transformer](https://nlp.seas.harvard.edu/2018/04/03/attention.html) 를 보면 pad mask와 subsequence mask를 헷갈리게 만들었다. 분명 `torch.masked_fill()` 함수에 들어가면 오류가 날거 같은 모양으로 만들어놨다. 하지만 중간에 `unsqueeze()` 함수를 넣어서 내가 원래 생각했던 모양이랑 동일하게 만들어진다.
+[annotated transformer](https://nlp.seas.harvard.edu/2018/04/03/attention.html) 를 보면 pad mask와 subsequence mask를 헷갈리게 만들었다. 분명 `torch.masked_fill()` 함수에 들어가면 오류가 날거 같은 모양으로 만들어놨다. 하지만 중간에 `unsqueeze()` 함수를 넣어서 내가 원래 생각했던 모양이랑 동일하게 만들어진다. 그래서 구현할 때 나는 처음 부터 `torch.masked_fill()` 함수에 들어갈 모양으로 만들었다.
 
 ```python
 src = torch.randint(1, 10, size=(10, 10))
