@@ -128,5 +128,7 @@ tgt_mask = pad_mask | seq_mask
 
 *Tips: log_softmax를 하지 않을 경우 KLDivLoss의 값이 음수로 나오고 절대값이 매우 크게 나온다*
 
+*Tips: annotated transformer와 loss를 똑같이 내기 위해서는 `KLDivLoss(reduction='sum')`을 사용해야 한다. 나도 왜그런지는 잘 모르겠다*
+
 
 
