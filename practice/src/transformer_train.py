@@ -66,11 +66,16 @@ class ModelWrapper(nn.Module):
         return self.model(*x)
 
     def run_epoch(self, dl, train=False):
+        if train: ##################
+            self.model.train()
+        else:
+            self.model.eval()
+
         total_loss = 0
         total_token = 0
         for iter, (x, y) in enumerate(dl):
             x, y = self.to_device(x), y.to(self.device)
-            token = (y != 0).sum().item()
+            token = (y != 0).sum().detach().item()
             fc_out = self.forward(x)
             loss = self.criterion(rearrange(fc_out, 'b s c -> (b s) c'), rearrange(y, 'b s -> (b s)')) / token
             if train:
@@ -90,6 +95,7 @@ class ModelWrapper(nn.Module):
             print('EPOCH {:03d} | Train Loss {:07.4f} | Valid Loss {:07.4f}'.format(epoch + 1, train_loss, valid_loss))
 
     def translate(self, ds):
+        self.model.eval() ##
         for iter, (src, tgt_input, tgt_output, src_mask, tgt_mask) in enumerate(zip(*ds)):
             tsl = self.model.greedy_decode(src.unsqueeze(0).to(self.device), src_mask.unsqueeze(0).to(self.device), max_len=10) ##
 
@@ -97,9 +103,6 @@ class ModelWrapper(nn.Module):
             print('tgt text) ', [1] + tgt_output.detach().tolist())
             print('tsl text) ', tsl[0].detach().tolist())
             print()
-
-            if iter == 10:
-                break
 
     def to_device(self, x):
         return [item.to(self.device) for item in x]
@@ -118,9 +121,9 @@ def run():
     optimizer = get_opt(model, factor=1, warmup=400)
     model = ModelWrapper(model, criterion, optimizer, device)
 
-    model.fit(train_dl, valid_dl, 10)
+    model.fit(train_dl, valid_dl, nepoch=10)
 
-    model.translate(get_sample_input(src_vocab_size, tgt_vocab_size, 30))
+    model.translate(get_sample_input(src_vocab_size, tgt_vocab_size, 10))
 
 
 def get_opt(model, factor=2, warmup=4000):
@@ -128,7 +131,7 @@ def get_opt(model, factor=2, warmup=4000):
                  warmup=warmup)
 
 
-def get_sample_dl(batch_num=20, batch_size=30, src_vocab_size=10, tgt_vocab_size=10):
+def get_sample_dl(batch_num=20, batch_size=30, src_vocab_size=11, tgt_vocab_size=11): ################
     for batch in range(batch_num):
         src, tgt_input, tgt_output, src_mask, tgt_mask = get_sample_input(src_vocab_size, tgt_vocab_size,
                                                                           batch_size)
