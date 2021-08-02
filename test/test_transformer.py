@@ -6,15 +6,15 @@ def test_transformer():
     src, tgt_input, tgt_output, src_mask, tgt_mask = get_sample_input()
     model = get_model(102, 103, 512, 6, 2048, 8, 0.1)
     out = model(src, tgt_input, src_mask, tgt_mask)
-    assert list(out.shape) == [10, 10, 103]
+    assert list(out.shape) == [10, 9, 103]
 
 
 def test_get_sample_data():
     src, tgt_input, tgt_output, src_mask, tgt_mask = get_sample_input()
     assert list(src_mask.shape) == [10, 1, 1, 10]
-    assert list(tgt_mask.shape) == [10, 1, 10, 10]
+    assert list(tgt_mask.shape) == [10, 1, 9, 9]
     assert list(src.shape) == [10, 10]
-    assert list(tgt_input.shape) == [10, 10]
+    assert list(tgt_input.shape) == [10, 9]
 
 
 def test_embedding():
