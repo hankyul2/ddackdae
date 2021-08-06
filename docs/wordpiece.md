@@ -1,3 +1,7 @@
+---
+typora-copy-images-to: pics
+---
+
 ## WordPiece
 
 WordPiece 모델은 ["japanese and korean voice search(2012)"](https://ieeexplore.ieee.org/abstract/document/6289079) 라는 논문에서 처음 제안 되었다. 해당 논문을 읽는데 너무너무너무 어려웠다. voice recognition을 몰라서 그런지 몰라도 내가 지금 읽고 있는 부분에서 말하는게 Speech Dictionary를 만하는 것인지 Written Dictionary를 말하고 있는건지 읽는 내내 헷갈렸다. 그래도 WordPiece 모델이 뭔지는 확실히 알게되었다. 이 논문은 내가 아직 다 읽었다고 할 수 없다. 나중에 voice recognition을 제대로 공부할 때 다시 읽어보고 이번에는 wordpiece에 대한 소개를 간략히 정리한다.
@@ -78,8 +82,10 @@ WordPiece 모델은 ["japanese and korean voice search(2012)"](https://ieeexplor
 
    <img src="https://bit.ly/3s4E89z" align="center" border="0" alt="BLEU = BP \times \exp( \sum_{n}^{N} w_{n} \times \log(p_{n}) )" width="287" height="50" />
 
-   이를 구현한 [nltk라이브러리](https://www.nltk.org/api/nltk.translate.html)를 사용할 수 있다. 
+   **[사용법]**
 
+   이를 구현한 [nltk라이브러리](https://www.nltk.org/api/nltk.translate.html)를 사용할 수 있다. 
+   
    ```python
    import nltk.translate.bleu_score as BLEU
    
@@ -91,8 +97,18 @@ WordPiece 모델은 ["japanese and korean voice search(2012)"](https://ieeexplor
    
    print(BLEU_score)
    ```
-
    
+   
+   
+   **[점수 해석]**
+   
+   BLEU Score를 이해하는 방법은 다음과 같다. 논문에서 발표할 때 28, 34, 39 이렇게 발표하는데 이는 백분율로 표시했기 때문이다. 또한 30~40 정도가 되면 양호한 편이라고 한다. 지금 SOTA가 35쯤 되니 양호한 번역이라고 할 수 있다. (물론 한국어 기준은 아니다) 
+   
+   ![image-20210806094236231](pics/image-20210806094236231.png)
+   
+   **[Smoothing]**
+   
+   다양한 Smoothing Functions이 존재하고 smoothing function에 따라서 bleu score가 달라지게 된다. 구글링을 조금 해봤지만 이부분은 아무래도 지금은 넘어가야 할 것 같다.
 
 
 

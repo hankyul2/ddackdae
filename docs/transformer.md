@@ -4,11 +4,17 @@ Transformer 논문을 읽으면서 중요한 점과 구현하면서 놓치기 �
 
 
 
+### 논문 요약
+
+*Not Yet*
+
+
+
+### 구현
+
 이번에 Transformer를 구현하면서 느낀점은 모델보다도 Data가 훨씬 더 중요하다는 점이다. 모델은 조금 이상하면 정확도가 떨어질 뿐이지만 데이터가 이상하면 아예 학습이 되지 않았다.
 
-
-
-### Data
+#### Data
 
 - src : source text
 - src_mask : source mask
@@ -54,7 +60,7 @@ tgt_mask = pad_mask | seq_mask
 
 
 
-### Encoding/Decoding Layer
+#### Encoding/Decoding Layer
 
 - src vocab size : source language의 vocab size
 - tgt vocab size : target language의 vocab size
@@ -65,7 +71,7 @@ tgt_mask = pad_mask | seq_mask
 
 
 
-### Positional Encoding
+#### Positional Encoding
 
 - div_term : positional encoding의 수식에 들어가는 한 부분
 
@@ -75,7 +81,7 @@ tgt_mask = pad_mask | seq_mask
 
 
 
-### FeedForwardNetwork
+#### FeedForwardNetwork
 
 - activation : weight 1과 weight 2 중간에 삽입되는 `relu` 혹은 `gelu` 같은 함수들
 
@@ -85,7 +91,7 @@ tgt_mask = pad_mask | seq_mask
 
 
 
-### Encoder Layer
+#### Encoder Layer
 
 - sublayer connection index: norm layer가 중복되서 사용되는 경우가 있더라
 
@@ -95,7 +101,7 @@ tgt_mask = pad_mask | seq_mask
 
 
 
-### Decoder Layer
+#### Decoder Layer
 
 - sublayer connection index: norm layer가 중복되서 사용되는 경우가 있더라
 
@@ -105,7 +111,7 @@ tgt_mask = pad_mask | seq_mask
 
 
 
-### Optimizer
+#### Optimizer
 
 - factor : 최대 learning rate의 크기가 결정되는 계수이다.
 - warmup : learning rate의 최대치를 결정하는 계수이다. 
@@ -116,7 +122,7 @@ tgt_mask = pad_mask | seq_mask
 
 
 
-### Label Smoothing
+#### Label Smoothing
 
 - log_softmax : KLDivLoss를 계산하기 위해서는 직접 `log_softmax` 함수를 호출해야한다.
 - smoothness : label smoothing에서 핵심적인 값이다.
@@ -132,7 +138,33 @@ tgt_mask = pad_mask | seq_mask
 
 
 
+### 적용
 
+다양한 **문장 번역 데이터셋**에 적용할 예정이다.
+
+1. IWSLT14 en-de (english to germany)
+2. WMT14 en-de (english to germany)
+3. [Ko-En](https://github.com/songys/AwesomeKorean_Data) *not selected yet*
+
+
+
+다양한 **문장 전처리 기법**을 사용해볼 예정입니다.
+
+1. WordPiece (english, germany, korean?)
+2. *not yet*
+
+
+
+**코드 제너레이션**에도 적용해볼 예정이다.
+
+1. english-to-python
+2. korean-to-python
+
+
+
+Transformer를 기반으로 한 다양한 **논문들의 기법**들을 적용해볼 예정입니다.
+
+*Not Yet*
 
 
 
