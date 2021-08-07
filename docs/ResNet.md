@@ -31,7 +31,7 @@ Deep Residual Learning for Image Recognition (2015, kahe@microsoft.com) 논문�
 
 해결책 : shortcut connection을 사용한다.
 
-실험 결과 : 다양한 recognition dataset에서 sota를 달성하고 다른 visual task에서 조차 높은 성능을 달성했다.
+실험 결과 : 많은 recognition dataset에서 sota를 달성하고 다양한 visual task에서 높은 성능을 달성했다.
 
 
 

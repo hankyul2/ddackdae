@@ -38,7 +38,7 @@ Here are model list I am planning to include in this project
 **Image Classification**
 
 - dataset
-  - CIFAR 10, CIFAR 100, ImageNet
+  - CIFAR 10, CIFAR 100, ImageNet, SVHN, STL 10
 
 - Alexnet
 - VGG
