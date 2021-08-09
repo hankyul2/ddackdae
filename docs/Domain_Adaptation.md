@@ -113,6 +113,36 @@ masked face verification
 
 
 
+### Unsupervised Domain Adaptation (2015)
+
+1. 요약
+   - 문제 : Label 정보를 얻기 힘든 상황이 있다.
+   - 해결책 : 비슷한 영역의 라벨 데이터를 사용해서 라벨이 없는 데이터를 활용하는 방법을 사용한다.
+
+2. 도입
+   - 기존 시도의 문제 : feature가 fixed 된다.
+   - 제안 방법 : 기존과는 다르게 source domain에서 학습한 classifier를 가지고 target domain에도 적용할 수 있는 classifier를 만드는 것이 목표이다.
+
+3. 관련 시도 (생략)
+
+4. Deep Domain Adaptation (3.2절만 확인)
+
+   Feature Extractor와 Domain Classfier가 학습하는 Gradient가 다르다. 이것을 위해서 Gradient Reversal Layer(GRL) 이 필요하다. 이 레이어는 Forward시와 Backward시가 다르게 동작하는 레이어이다. 포워드시에는 Identity 매핑을 하고 백워드시에는 음수를 곱하는 레이어이다. 해당 레이어는 기존 파이토치 라이브러리로 쉽게 구현이 가능하다고 한다. 하지만 나는 잘 알지 못하므로 알아봐야 겠다.
+
+   ![image-20210808181041361](pics/image-20210808181041361.png)
+
+
+
+### Domain Adaptation + Face
+
+Face 영역의 경우 Classifier를 학습에만 사용하고 실제 추론시에는 사용하지 않는다. 왜냐하면 추론시에는 어떤 얼굴이 나올지 알 수 없기 때문이다. 따라서 기존 Domain Adaptaion의 특징 중 하나인 Classifier를 공유한다는 점을 이용 할 수 없다. 
+
+![image-20210808180133629](pics/image-20210808180133629.png)
+
+Adaptation Factor와 Target Domain의 Validation Set을 어떻게 정해야 할지 잘 모르겠다.
+
+
+
 ### SHOT (2020)
 
 1. SHOT의 주요 용어
