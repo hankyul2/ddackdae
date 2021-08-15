@@ -107,6 +107,22 @@ masked face verification
 
       2. Office-Home 데이터셋에서의 결과 (Ar: Artistic images, Cl: Clip Art, Pr: Product images, Rw: Real-World images)
 
+   | 범주      | 카테고리           | 내용                                                         |
+   | --------- | ------------------ | ------------------------------------------------------------ |
+   | 데이터    | 데이터 전처리      | Office-31 (W(759) -> A(2817), nclass=31), Following ImageNet |
+   |           | Train Augmentation | RandomResizedCrop, Horizontal Flip                           |
+   |           | Test Augmentation* | Random Crop + Horiontal Flip, 10번(생략)                     |
+   | 모델      | 모델 구조*         | ResNet50 (Pre-trained on ImageNet, pytorch version), bottleneck(생략) |
+   |           | Regularization     | Nope                                                         |
+   | 학습 도구 | Optimizer          | SGD, lr=0.003, weight_decay=0.0005, momentum = 0.95          |
+   |           | Criterion          | CLS + 1 * DANN + 0.0001 * BSP                                |
+   |           | LR Scheduler*      | 원래 논문과 다르게 했음                                      |
+   | 학습      | 에포치*            | 50                                                           |
+   |           | 배치 크기          | 36                                                           |
+   | 평가      | 평가 방법          |                                                              |
+
+   
+
 7. 유사 시도
 
 8. 결론
@@ -125,11 +141,21 @@ masked face verification
 
 3. 관련 시도 (생략)
 
-4. Deep Domain Adaptation (3.2절만 확인)
+4. Deep Domain Adaptation (3.3 제외)
+
+   Source Domain -> Target Domain
 
    Feature Extractor와 Domain Classfier가 학습하는 Gradient가 다르다. 이것을 위해서 Gradient Reversal Layer(GRL) 이 필요하다. 이 레이어는 Forward시와 Backward시가 다르게 동작하는 레이어이다. 포워드시에는 Identity 매핑을 하고 백워드시에는 음수를 곱하는 레이어이다. 해당 레이어는 기존 파이토치 라이브러리로 쉽게 구현이 가능하다고 한다. 하지만 나는 잘 알지 못하므로 알아봐야 겠다.
-
+   
    ![image-20210808181041361](pics/image-20210808181041361.png)
+   
+5. 실험 (4.0 항목만 정리)
+
+   1. labmda: 논문은 여기서 p 값이 어떤 의미인지 설명하지는 않는다. 그렇다면 p 값을 어떻게 해석해야 할까? 일단 step_size를 max_iter로 나눈 값이라고 이해 했다.
+
+      ![image-20210811182330567](pics/image-20210811182330567.png)
+
+   2. 학습이 잘 되었다는 지표는 source domain의 test error가 낮고 domain classifier error가 큰 상황이다.
 
 
 
