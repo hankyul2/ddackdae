@@ -176,3 +176,87 @@ Adaptation Factor와 Target Domain의 Validation Set을 어떻게 정해야 할�
 
 
 
+### BenchMark
+
+내가 Benchmark로 삼은 데이터셋은 Office-31 이다. 각 논문마다 성능이 조금씩 다르게 적혀있어서 내가 읽은 논문 위주로 성능을 정리해봤다. 특히, Office-31에서 W->A(more difficult) , A->W 부분의 DANN, BSP, SHOT 성능을 정리하고자 한다
+
+|             | DANN (2016)  | BSP (2019)    | SHOT (2021)   | In this work (2021)                             |
+| ----------- | ------------ | ------------- | ------------- | ----------------------------------------------- |
+| source only | 64.2%        | 68.4%         | 68.4%         | **77.8%**<br />(78.125, 77.734, 77.604)         |
+| DANN        | 73.0%(+8.8%) | 82.0%(+13.6%) | 82.0%(+13.6%) | **81.5% (+3.7%)**<br />(81.250, 82.031, 81.250) |
+| DANN + BSP  | -            | 93%           | -             | **76.1% (-1.7%)**<br />(74.479, 76.563, 77.344) |
+| CDAN + BSP  | -            | 93.3%         | 93.0%         | **91.2%**<br />91.016, 91.406, 91.146)          |
+| SHOT        | -            |               | 94.0%         |                                                 |
+
+*표 - Amazon(source), Webcam(target)*
+
+
+
+|             | DANN (2016) | BSP (2019) | SHOT (2021) | In this work (2021)                     |
+| ----------- | ----------- | ---------- | ----------- | --------------------------------------- |
+| source only | -           | 60.7%      | 60.7%       | **65.4%**<br />(65.660, 64.773, 65.767) |
+| DANN        | -           | 67.4%      | 67.4%       | **64.4%**<br />(64.489, 64.560, 64.250) |
+| DANN + BSP  | -           | 73.0%      | -           |                                         |
+| CDAN + BSP  | -           | 72.6%      | 72.6%       | **73.2%**<br />(72.230, 74.609, 72.905) |
+| SHOT        | -           | -          | 74.3%       |                                         |
+
+*표 - Webcam(source), Amazon(target)*
+
+
+
+### Various Experiment on W -> A
+
+Condition : CDAN + BSP + Entropy, weight_decay + lr scheduler (multi-crop removed)
+
+![image-20210816113140881](pics/image-20210816113140881.png)
+
+
+
+Condition : CDAN + BSP, weight_decay + lr scheduler (entropy, multi-crop removed)
+
+![image-20210816114515868](pics/image-20210816114515868.png)
+
+
+
+Condition : DANN + BSP, weight_decay + lr scheduler (entropy, multi-crop removed, DANN instead of CDAN)
+
+안된다... 개빡친다... 아니 애초에 안되는거였다. 물론 Iter 50000 까지 돌리면 될 수도 있겠지만 그건 내 시간이 너무 아깝고 그냥 DANN에서 CDAN으로 갈아타기로 했다.
+
+![image-20210816120745468](pics/image-20210816120745468.png)
+
+
+
+Condition : Classification Loss Only, weight_decay + lr scheduler (entropy, multi-crop, CDAN, BSP removed)
+
+![image-20210816123104971](pics/image-20210816123104971.png)
+
+
+
+### Various Experiment on A -> W
+
+Condition : CDAN + BSP, weight_decay + lr scheduler (entropy, multi-crop removed)
+
+![image-20210816115106264](pics/image-20210816115106264.png)
+
+
+
+Condition : DANN + BSP, weight_decay + lr scheduler (entropy, multi-crop removed, DANN instead of CDAN)
+
+이 친구도 그렇게 좋은 결과는 아니다. 하지만 84% 까지 올라간것을 보면 확실히 학습이되기는 했다.
+
+![image-20210816121227945](pics/image-20210816121227945.png)
+
+
+
+Condition : Classification Loss Only, weight_decay + lr scheduler (entropy, multi-crop, CDAN, BSP removed)
+
+![image-20210816123114759](pics/image-20210816123114759.png)
+
+
+
+정리 CDAN + BSP + Entropy + MultiCrop 을 해야 원하는 결과를 얻을 수 있다.
+
+BSP + DANN은 매우 많은 Epoch을 돌려야 결과를 얻을 수 있다.
+
+
+
